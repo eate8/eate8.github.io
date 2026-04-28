@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="google-site-verification" content="iCqRrV53Mo6rUukDDPtk2o7GCGbcK7cCaR464LAX_2w" />
+    <title>Eate8 - Food Journaling and Tracking 📈 🍽️</title>
+    <link rel="icon" type="image/png" href="icon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --lime: #B8FF57; --lime-dark: #9FE03D; --cream: #FFFEF5;
+            --pink: #FFB3BA; --yellow: #FFD93D; --purple: #E5D9F2;
+            --dark: #1A1A1A; --gray: #666666; --light-gray: #F5F5F5;
+        }
+        body { font-family: 'Inter', -apple-system, sans-serif; background: var(--cream); color: var(--dark); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+        nav { position: fixed; top: 0; width: 100%; background: rgba(255, 254, 245, 0.95); backdrop-filter: blur(20px); z-index: 1000; border-bottom: 2px solid #000; }
+        .nav-container { max-width: 1400px; margin: 0 auto; padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 3.8rem; font-weight: 900; color: #000; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+        .logo span { padding: 4px 12px; border-radius: 8px; }
+        .nav-links { display: flex; gap: 35px; align-items: center; }
+        .nav-links a { text-decoration: none; color: #808900; font-weight: 600; font-size: 0.95rem; transition: all 0.3s; position: relative; }
+        .nav-links a:hover { color: #ffffff; }
+        .nav-cta { background: #000; color: #ffffff; padding: 12px 28px; border-radius: 25px; font-weight: 700; transition: all 0.3s; border: 2px solid #000; }
+        .nav-cta:hover { background: var(--lime); color: #ffffff; }
+        .hero { padding: 140px 40px 80px; max-width: 1400px; margin: 0 auto; }
+        .hero-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; }
+        .hero-text h1 { font-size: 4rem; font-weight: 900; line-height: 1.1; margin-bottom: 24px; letter-spacing: -2px; }
+        .hero-text h1 .highlight { background: var(--lime); padding: 0 16px; border-radius: 12px; display: inline-block; }
+        .hero-text p { font-size: 1.3rem; color: var(--gray); margin-bottom: 40px; line-height: 1.7; }
+        .hero-buttons { display: flex; gap: 20px; flex-wrap: wrap; }
+        .btn-primary { background: #000; color: #fff; padding: 18px 40px; border-radius: 30px; font-weight: 800; font-size: 1.1rem; text-decoration: none; border: 3px solid #000; transition: all 0.3s; display: inline-block; }
+        .btn-primary:hover { background: var(--lime); color: #000; transform: translateY(-3px); }
+        .btn-secondary { background: #fff; color: #000; padding: 18px 40px; border-radius: 30px; font-weight: 800; font-size: 1.1rem; text-decoration: none; border: 3px solid #000; transition: all 0.3s; display: inline-block; }
+        .btn-secondary:hover { background: var(--yellow); transform: translateY(-3px); }
+        .hero-visual { position: relative; }
+        .phone-frame { background: #fff; border: 4px solid #000; border-radius: 40px; padding: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.15), 0 0 0 8px var(--lime); position: relative; overflow: hidden; }
+        .phone-screen { background: linear-gradient(135deg, #F5F5F5 0%, #E8E8E8 100%); border-radius: 32px; padding: 30px 20px; min-height: 600px; border: 2px solid #000; position: relative; }
+        .screen-header { text-align: center; margin-bottom: 30px; }
+        .screen-title { font-size: 1.3rem; font-weight: 900; margin-bottom: 8px; }
+        .screen-subtitle { color: var(--gray); font-weight: 600; }
+        .stat-cards { display: flex; flex-direction: column; gap: 16px; }
+        .stat-card { background: #fff; border: 3px solid #000; border-radius: 18px; padding: 16px; box-shadow: 4px 4px 0 #000; }
+        .stat-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .stat-label { font-weight: 800; font-size: 0.85rem; }
+        .stat-value { font-weight: 900; font-size: 1.1rem; color: #000; }
+        .stat-graph { position: relative; height: 80px; margin-top: 10px; }
+        .graph-svg { width: 100%; height: 100%; }
+        .graph-grid-line { stroke: #E0E0E0; stroke-width: 1; stroke-dasharray: 3, 3; }
+        .graph-path { fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+        .graph-area { opacity: 0.2; }
+        .graph-dot { fill: #fff; stroke-width: 3; }
+        .stat-card:nth-child(1) .graph-path { stroke: var(--lime); }
+        .stat-card:nth-child(1) .graph-area { fill: var(--lime); }
+        .stat-card:nth-child(1) .graph-dot { stroke: var(--lime); }
+        .stat-card:nth-child(2) .graph-path { stroke: var(--yellow); }
+        .stat-card:nth-child(2) .graph-area { fill: var(--yellow); }
+        .stat-card:nth-child(2) .graph-dot { stroke: var(--yellow); }
+        .stat-card:nth-child(3) .graph-path { stroke: var(--pink); }
+        .stat-card:nth-child(3) .graph-area { fill: var(--pink); }
+        .stat-card:nth-child(3) .graph-dot { stroke: var(--pink); }
+        .graph-label { font-size: 10px; fill: #999; font-weight: 600; }
+        .features { padding: 100px 40px; background: #fff; border-top: 3px solid #000; border-bottom: 3px solid #000; }
+        .section-header { text-align: center; max-width: 800px; margin: 0 auto 80px; }
+        .section-title { font-size: 3rem; font-weight: 900; margin-bottom: 20px; letter-spacing: -1px; }
+        .section-subtitle { font-size: 1.2rem; color: var(--gray); font-weight: 600; }
+        .features-grid { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .feature-card { background: var(--cream); border: 3px solid #000; border-radius: 24px; padding: 40px; transition: all 0.3s; box-shadow: 0 4px 0 #000; }
+        .feature-card:hover { transform: translateY(-8px); box-shadow: 0 12px 0 #000; }
+        .feature-icon { font-size: 3.5rem; margin-bottom: 24px; display: inline-block; }
+        .feature-card h3 { font-size: 1.5rem; font-weight: 900; margin-bottom: 16px; }
+        .feature-card p { color: var(--gray); line-height: 1.7; font-weight: 500; }
+        .screenshots { padding: 100px 40px; background: var(--cream); }
+        .screenshots-slider { max-width: 1600px; margin: 0 auto; overflow: hidden; }
+        .screenshots-track { display: flex; gap: 24px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 20px 0; scrollbar-width: none; }
+        .screenshots-track::-webkit-scrollbar { display: none; }
+        .screenshot-item { flex: 0 0 350px; scroll-snap-align: start; }
+        .screenshot-frame { background: #fff; border: 4px solid #000; border-radius: 32px; padding: 12px; box-shadow: 8px 8px 0 #000; transition: all 0.3s; }
+        .screenshot-frame:hover { transform: translateY(-8px); box-shadow: 12px 12px 0 #000; }
+        .screenshot-image { width: 100%; height: 500px; background: #F5F5F5; border-radius: 24px; border: 2px solid #000; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .screenshot-image img { width: 100%; height: 100%; object-fit: cover; }
+        .screenshot-caption { margin-top: 20px; text-align: center; }
+        .screenshot-caption h3 { font-weight: 900; font-size: 1.2rem; margin-bottom: 8px; }
+        .screenshot-caption p { color: var(--gray); font-weight: 600; }
+        .nutrients { padding: 100px 40px; background: #000; color: #fff; }
+        .nutrients-content { max-width: 1200px; margin: 0 auto; }
+        .nutrients h2 { font-size: 3rem; font-weight: 900; text-align: center; margin-bottom: 60px; }
+        .nutrients-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 20px; }
+        .nutrient-badge { background: var(--lime); color: #000; border: 3px solid #fff; border-radius: 20px; padding: 24px 20px; text-align: center; font-weight: 900; font-size: 1rem; transition: all 0.3s; }
+        .nutrient-badge:hover { transform: scale(1.1); background: var(--yellow); }
+        .cta { padding: 120px 40px; background: var(--cream); text-align: center; }
+        .cta h2 { font-size: 3.5rem; font-weight: 900; margin-bottom: 24px; letter-spacing: -1px; }
+        .cta p { font-size: 1.3rem; color: var(--gray); margin-bottom: 40px; font-weight: 600; }
+        .legal-section { padding: 100px 40px; background: #fff; border-top: 3px solid #000; }
+        .legal-container { max-width: 900px; margin: 0 auto; background: var(--cream); border: 4px solid #000; border-radius: 32px; padding: 60px; box-shadow: 12px 12px 0 #000; }
+        .legal-header { margin-bottom: 50px; padding-bottom: 30px; border-bottom: 3px solid #000; }
+        .legal-title { font-size: 2.5rem; font-weight: 900; margin-bottom: 20px; }
+        .meta-badge { display: inline-block; background: var(--lime); color: #000; padding: 10px 20px; border-radius: 12px; font-size: 0.9rem; font-weight: 800; border: 2px solid #000; }
+        .legal-section h2 { font-size: 1.6rem; font-weight: 900; margin-top: 40px; margin-bottom: 20px; color: #000; }
+        .legal-section h3 { font-weight: 800; margin-top: 30px; margin-bottom: 15px; font-size: 1.2rem; }
+        .legal-section p { margin-bottom: 20px; color: var(--gray); line-height: 1.8; font-weight: 500; }
+        .legal-section ul { margin-left: 30px; margin-bottom: 25px; }
+        .legal-section li { margin-bottom: 12px; color: var(--gray); line-height: 1.8; font-weight: 500; }
+        .legal-section strong { color: #000; font-weight: 800; }
+        .legal-section a { color: #000; font-weight: 800; text-decoration: underline; }
+        footer { background: #000; color: #fff; padding: 60px 40px 40px; border-top: 4px solid var(--lime); }
+        .footer-content { max-width: 1400px; margin: 0 auto; }
+        .footer-logo { font-size: 2rem; font-weight: 900; margin-bottom: 30px; text-align: center; }
+        .footer-logo span { background: var(--lime); color: #000; padding: 4px 16px; border-radius: 8px; }
+        .footer-links { display: flex; justify-content: center; gap: 40px; margin-bottom: 40px; flex-wrap: wrap; }
+        .footer-links a { color: #fff; text-decoration: none; font-weight: 700; transition: color 0.3s; }
+        .footer-links a:hover { color: var(--lime); }
+        .footer-bottom { text-align: center; color: #999; font-weight: 600; }
+        @media (max-width: 968px) {
+            .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+            .hero-text h1 { font-size: 2.5rem; }
+            .features-grid { grid-template-columns: 1fr; }
+            .screenshot-item { flex: 0 0 300px; }
+            .legal-container { padding: 40px 30px; }
+            .nav-links { gap: 15px; }
+            .nav-links a:not(.nav-cta) { display: none; }
+        }
+        @media (max-width: 600px) {
+            .hero-text h1 { font-size: 2rem; }
+            .section-title { font-size: 2rem; }
+            .cta h2 { font-size: 2rem; }
+            .legal-title { font-size: 2rem; }
+        }
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="#home" class="logo"><span>EATE8</span></a>
+            <div class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#screenshots">App</a>
+                <a href="#nutrients">Nutrients</a>
+                <a href="#privacy">Privacy</a>
+                <a href="#download" class="nav-cta">Download</a>
+            </div>
+        </div>
+    </nav>
+    <section class="hero" id="home">
+        <div class="hero-grid">
+            <div class="hero-text">
+                <h1>Make Your <span class="highlight">Food Journaling</span> Journey Into Stats..</h1>
+                <p>Track 14+ nutrients, discover your best foods, and time travel through your diet. Your nutrition, analyzed.</p>
+                <div class="hero-buttons">
+                    <a href="#download" class="btn-primary">Download Now</a>
+                    <a href="#features" class="btn-secondary">See Features</a>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="phone-frame">
+                    <div class="phone-screen">
+                        <div class="screen-header">
+                            <div class="screen-title">Your Daily Stats</div>
+                            <div class="screen-subtitle">Today's Progress</div>
+                        </div>
+                        <div class="stat-cards">
+                            <div class="stat-card">
+                                <div class="stat-card-header">
+                                    <span class="stat-label">💪 Protein</span>
+                                    <span class="stat-value">68g</span>
+                                </div>
+                                <div class="stat-graph">
+                                    <svg class="graph-svg" viewBox="0 0 280 100" preserveAspectRatio="none">
+                                        <line class="graph-grid-line" x1="0" y1="25" x2="280" y2="25" />
+                                        <line class="graph-grid-line" x1="0" y1="50" x2="280" y2="50" />
+                                        <line class="graph-grid-line" x1="0" y1="75" x2="280" y2="75" />
+                                        <path class="graph-area" d="M 0,80 Q 40,70 70,55 T 140,45 Q 180,40 210,35 T 280,42 L 280,100 L 0,100 Z" />
+                                        <path class="graph-path" d="M 0,80 Q 40,70 70,55 T 140,45 Q 180,40 210,35 T 280,42" />
+                                        <circle class="graph-dot" cx="0" cy="80" r="4" />
+                                        <circle class="graph-dot" cx="56" cy="62" r="4" />
+                                        <circle class="graph-dot" cx="112" cy="50" r="4" />
+                                        <circle class="graph-dot" cx="168" cy="40" r="4" />
+                                        <circle class="graph-dot" cx="224" cy="36" r="4" />
+                                        <circle class="graph-dot" cx="280" cy="42" r="4" />
+                                        <text class="graph-label" x="0" y="98" text-anchor="start">Mon</text>
+                                        <text class="graph-label" x="140" y="98" text-anchor="middle">Thu</text>
+                                        <text class="graph-label" x="280" y="98" text-anchor="end">Sun</text>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-card-header">
+                                    <span class="stat-label">🍊 Vitamin C</span>
+                                    <span class="stat-value">142mg</span>
+                                </div>
+                                <div class="stat-graph">
+                                    <svg class="graph-svg" viewBox="0 0 280 100" preserveAspectRatio="none">
+                                        <line class="graph-grid-line" x1="0" y1="25" x2="280" y2="25" />
+                                        <line class="graph-grid-line" x1="0" y1="50" x2="280" y2="50" />
+                                        <line class="graph-grid-line" x1="0" y1="75" x2="280" y2="75" />
+                                        <path class="graph-area" d="M 0,70 Q 40,55 70,45 T 140,30 Q 180,28 210,25 T 280,30 L 280,100 L 0,100 Z" />
+                                        <path class="graph-path" d="M 0,70 Q 40,55 70,45 T 140,30 Q 180,28 210,25 T 280,30" />
+                                        <circle class="graph-dot" cx="0" cy="70" r="4" />
+                                        <circle class="graph-dot" cx="56" cy="50" r="4" />
+                                        <circle class="graph-dot" cx="112" cy="38" r="4" />
+                                        <circle class="graph-dot" cx="168" cy="28" r="4" />
+                                        <circle class="graph-dot" cx="224" cy="26" r="4" />
+                                        <circle class="graph-dot" cx="280" cy="30" r="4" />
+                                        <text class="graph-label" x="0" y="98" text-anchor="start">Mon</text>
+                                        <text class="graph-label" x="140" y="98" text-anchor="middle">Thu</text>
+                                        <text class="graph-label" x="280" y="98" text-anchor="end">Sun</text>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-card-header">
+                                    <span class="stat-label">⚙️ Iron</span>
+                                    <span class="stat-value">12.4mg</span>
+                                </div>
+                                <div class="stat-graph">
+                                    <svg class="graph-svg" viewBox="0 0 280 100" preserveAspectRatio="none">
+                                        <line class="graph-grid-line" x1="0" y1="25" x2="280" y2="25" />
+                                        <line class="graph-grid-line" x1="0" y1="50" x2="280" y2="50" />
+                                        <line class="graph-grid-line" x1="0" y1="75" x2="280" y2="75" />
+                                        <path class="graph-area" d="M 0,65 Q 40,58 70,50 T 140,48 Q 180,52 210,45 T 280,50 L 280,100 L 0,100 Z" />
+                                        <path class="graph-path" d="M 0,65 Q 40,58 70,50 T 140,48 Q 180,52 210,45 T 280,50" />
+                                        <circle class="graph-dot" cx="0" cy="65" r="4" />
+                                        <circle class="graph-dot" cx="56" cy="54" r="4" />
+                                        <circle class="graph-dot" cx="112" cy="49" r="4" />
+                                        <circle class="graph-dot" cx="168" cy="50" r="4" />
+                                        <circle class="graph-dot" cx="224" cy="46" r="4" />
+                                        <circle class="graph-dot" cx="280" cy="50" r="4" />
+                                        <text class="graph-label" x="0" y="98" text-anchor="start">Mon</text>
+                                        <text class="graph-label" x="140" y="98" text-anchor="middle">Thu</text>
+                                        <text class="graph-label" x="280" y="98" text-anchor="end">Sun</text>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="features" id="features">
+        <div class="section-header">
+            <h2 class="section-title">Everything You Need</h2>
+            <p class="section-subtitle">Powerful nutrition tracking made simple</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Track 14+ Nutrients</h3>
+                <p>Complete visibility into vitamins, minerals, macros, and more. Know exactly what you're eating.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⭐</div>
+                <h3>Star Food Rankings</h3>
+                <p>AI discovers which foods give you the most nutrition. Optimize your diet effortlessly.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📅</div>
+                <h3>Time Travel</h3>
+                <p>Ask "what did I eat on Jan 3rd?" and get instant insights. Complete meal memory.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📈</div>
+                <h3>Visual Analytics</h3>
+                <p>Beautiful charts show your nutrition trends. Spot patterns and improve over time.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔔</div>
+                <h3>Smart Reminders</h3>
+                <p>Motivational notifications (with optional "roast" mode). Stay on track, your way.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>Privacy First</h3>
+                <p>Your data is encrypted and never sold. Delete anytime with one tap.</p>
+            </div>
+        </div>
+    </section>
+    <section class="screenshots" id="screenshots">
+        <div class="section-header">
+            <h2 class="section-title">See Eate8 in Action</h2>
+            <p class="section-subtitle">Swipe to explore the app</p>
+        </div>
+        <div class="screenshots-slider">
+            <div class="screenshots-track">
+                <div class="screenshot-item">
+                    <div class="screenshot-frame">
+                        <div class="screenshot-image">
+                            <img src="flashback.png" alt="Stats" onerror="this.parentElement.innerHTML='<div style=\'padding:40px;text-align:center;color:#999;\'>Detailed Stats</div>'">
+                        </div> 
+                    </div> 
+                    <div class="screenshot-caption"> 
+                        <h3>Food Time Travel</h3> 
+                        <p>Get Notified What You Ate In Past</p>
+                    </div>
+                </div>
+                <div class="screenshot-item">
+                    <div class="screenshot-frame">
+                        <div class="screenshot-image">
+                            <img src="screenshot-2.png" alt="Dashboard" onerror="this.parentElement.innerHTML='<div style=\'padding:30px;text-align:center;color:#999;\'>Dashboard View</div>'">
+                        </div>
+                    </div>
+                    <div class="screenshot-caption">
+                        <h3>Dashboard</h3>
+                        <p>Your nutrition at a glance</p>
+                    </div>
+                </div>
+                <div class="screenshot-item">
+                    <div class="screenshot-frame">
+                        <div class="screenshot-image">
+                            <img src="screenshot-3.png" alt="Stats" onerror="this.parentElement.innerHTML='<div style=\'padding:40px;text-align:center;color:#999;\'>Detailed Stats</div>'">
+                        </div>
+                    </div>
+                    <div class="screenshot-caption">
+                        <h3>Nutrient Breakdown</h3>
+                        <p>Every vitamin tracked</p>
+                    </div>
+                </div>
+                <div class="screenshot-item">
+                    <div class="screenshot-frame">
+                        <div class="screenshot-image">
+                            <img src="screenshot-4.png" alt="History" onerror="this.parentElement.innerHTML='<div style=\'padding:40px;text-align:center;color:#999;\'>Meal History</div>'">
+                        </div>
+                    </div>
+                    <div class="screenshot-caption">
+                        <h3>Food Memory</h3>
+                        <p>Time travel your diet</p>
+                    </div>
+                </div>
+                <div class="screenshot-item">
+                    <div class="screenshot-frame">
+                        <div class="screenshot-image">
+                            <img src="screenshot-5.png" alt="Analytics" onerror="this.parentElement.innerHTML='<div style=\'padding:40px;text-align:center;color:#999;\'>Analytics</div>'">
+                        </div>
+                    </div>
+                    <div class="screenshot-caption">    
+                        <h3>Logging</h3>
+                        <p>It Takes Anything!</p>
+                    </div>
+                </div>
+                <div class="screenshot-item">
+                    <div class="screenshot-frame">
+                        <div class="screenshot-image">
+                            <img src="Screenshot_2026-02-13_215136.png" alt="App Screenshots">
+                        </div>
+                    </div>
+                    <div class="screenshot-caption">
+                        <h3>All Features</h3>
+                        <p>Complete nutrition tracking suite</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="nutrients" id="nutrients">
+        <div class="nutrients-content">
+            <h2>Track Every Nutrient</h2>
+            <div class="nutrients-grid">
+                <div class="nutrient-badge">🔥 Calories</div>
+                <div class="nutrient-badge">💪 Protein</div>
+                <div class="nutrient-badge">🍞 Carbs</div>
+                <div class="nutrient-badge">🥑 Fats</div>
+                <div class="nutrient-badge">🍬 Sugar</div>
+                <div class="nutrient-badge">🌾 Fiber</div>
+                <div class="nutrient-badge">🧂 Sodium</div>
+                <div class="nutrient-badge">⚙️ Iron</div>
+                <div class="nutrient-badge">🛡️ Zinc</div>
+                <div class="nutrient-badge">✨ Biotin</div>
+                <div class="nutrient-badge">⚡ Magnesium</div>
+                <div class="nutrient-badge">🫀 Potassium</div>
+                <div class="nutrient-badge">👁️ Vitamin A</div>
+                <div class="nutrient-badge">🍊 Vitamin C</div>
+                <div class="nutrient-badge">☀️ Vitamin D</div>
+            </div>
+        </div>
+    </section>
+    <section class="cta" id="download">
+        <h2>Ready to Track?</h2>
+        <p>Join thousands optimizing their nutrition with Eate8</p>
+        <a href="#" class="btn-primary">Download for Android</a>
+    </section>
+    <section class="legal-section" id="privacy">
+        <div class="legal-container">
+            <div class="legal-header">
+                <h1 class="legal-title">Privacy Policy</h1>
+                <div class="meta-badge">Effective: January 18, 2026</div>
+                <div style="margin-top: 15px; font-size: 0.95rem; color: #666; font-weight: 600;">Contact: pabichat@gmail.com</div>
+            </div>
+            <h2>1. Introduction and Consent</h2>
+            <p>Eate8 ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, and safeguard your information. <strong>By creating an account and using the App, you explicitly consent to the collection and use of your data as described in this Privacy Policy.</strong> Eate8 complies with all applicable Google Play Developer Policies regarding sensitive user data.</p>
+            <h2>2. Information We Collect</h2>
+            <p>We collect data strictly necessary to provide our core health tracking and statistical services.</p>
+            <h3>A. Personal Data</h3>
+            <p>To secure your account and synchronize data across devices, we collect:</p>
+            <ul>
+                <li><strong>Email Address</strong> (via Authentication)</li>
+                <li><strong>Name</strong> (for profile personalization)</li>
+            </ul>
+            <h3>B. Health and Fitness Data (Sensitive Data)</h3>
+            <p>To deliver the core functionality of the App (micronutrient tracking and statistical analysis), you voluntarily provide:</p>
+            <ul>
+                <li><strong>Body Metrics:</strong> Weight, height, age, and gender.</li>
+                <li><strong>Dietary Data:</strong> Food logs, calorie intake, and specific nutrient goals (e.g., Biotin, Zinc).</li>
+            </ul>
+            <p><strong>Usage & Restrictions:</strong> All health and fitness data is provided voluntarily by the user and is used <strong>solely</strong> to deliver the core functionality of the App (analytics and tracking). We do NOT use health or fitness data for advertising purposes.</p>
+            <h3>C. Device, Usage, and Diagnostic Data</h3>
+            <ul>
+                <li><strong>Device Information & Diagnostics:</strong> We collect device models, operating system versions, and crash reports to assist with debugging and app stability. We use third-party diagnostic tools (such as Sentry) to automatically capture error logs. If the app crashes, this report may include your account identifier (email or User ID) and the specific action that caused the error to help our engineering team fix the issue. This data is strictly used for improving app stability.</li>
+                <li><strong>Advertising ID:</strong> We collect the Android Advertising ID. This is used strictly by our third-party advertising partners (e.g., Google AdMob) to provide and measure advertisements. Users can reset or limit ad personalization at any time through their device settings.</li>
+            </ul>
+            <h3>D. Location Data</h3>
+            <p>We may request access to coarse location (City).</p>
+            <p><strong>Usage:</strong> Location data, if granted, is used <strong>only</strong> for regional feature customization (e.g., localizing food units) and is <strong>never</strong> stored or tracked continuously.</p>
+            <h2>3. How We Use Your Information</h2>
+            <ul>
+                <li><strong>Core Services:</strong> To calculate "Star Food" rankings, visualize nutritional statistics, and track daily progress.</li>
+                <li><strong>Notifications:</strong> To send meal reminders and "Roast" messages. Users can control or disable these notifications at any time through device settings.</li>
+                <li><strong>AI Meal Analysis:</strong> When you log a meal via text, the description is securely transmitted to and processed by artificial intelligence models (such as Google Gemini) to calculate nutritional values. We do not sell this input data, and it is strictly used to return the nutritional breakdown to your personal diary.</li>
+                <li><strong>Advertising:</strong> To display third-party advertisements. Health data is excluded from ad targeting.</li>
+            </ul>
+            <h2>4. Data Storage and Security</h2>
+            <ul>
+                <li><strong>Storage:</strong> Your data is securely stored on <strong>Supabase</strong>, an enterprise-grade cloud provider.</li>
+                <li><strong>Encryption:</strong> We use industry-standard encryption (SSL) to protect data in transit.</li>
+                <li><strong>Disclaimer:</strong> While we use commercially acceptable means to protect your data, no method of transmission over the Internet is 100% secure.</li>
+            </ul>
+            <h2>5. Third-Party Services</h2>
+            <p>We share data with trusted third parties solely for app functionality:</p>
+            <ul>
+                <li><strong>Supabase:</strong> For secure database hosting and authentication.</li>
+                <li><strong>Google AdMob:</strong> For displaying advertisements (utilizing Advertising ID only).</li>
+                <li><strong>Sentry:</strong> For capturing crash reports and monitoring app stability.</li>
+                <li><strong>Google Gemini:</strong> For processing text inputs to estimate nutritional data.</li>
+            </ul>
+            <h2>6. Data Retention and Deletion</h2>
+            <ul>
+                <li><strong>Retention:</strong> We retain your data only as long as your account is active.</li>
+                <li><strong>Deletion:</strong> You have the right to delete your account at any time. You can delete your account directly within the App by navigating to <strong>Settings > Delete Account</strong>. This action permanently wipes your data from our servers.</li>
+            </ul>
+        </div>
+    </section>
+    <section class="legal-section" id="terms">
+        <div class="legal-container">
+            <div class="legal-header">
+                <h1 class="legal-title">Terms of Service</h1>
+                <div class="meta-badge">Effective: January 18, 2026</div>
+                <div style="margin-top: 15px; font-size: 0.95rem; color: #666; font-weight: 600;">Contact: pabichat@gmail.com</div>
+            </div>
+            <h2>1. Acceptance of Terms</h2>
+            <p>By downloading or using the Eate8 app (the "App"), you agree to be bound by these Terms of Service. If you do not agree, please do not use the App.</p>
+            <h2>2. Medical Disclaimer</h2>
+            <p><strong>Eate8 is NOT a medical device.</strong></p>
+            <ul>
+                <li>The content provided by the App, including nutritional data, "Star Food" rankings, and health insights, is for <strong>informational and general wellness purposes only</strong>.</li>
+                <li>We are <strong>not</strong> doctors or nutritionists. Nothing in the App should be construed as medical advice or diagnosis.</li>
+                <li>Always consult a physician before making drastic changes to your diet.</li>
+                <li><strong>AI Nutritional Accuracy:</strong> Eate8 uses artificial intelligence to estimate the nutritional content of the meals you log. While we strive for accuracy, these estimations are generated by AI and are not a substitute for precise laboratory testing or professional dietary advice. Eate8 is not liable for any inaccuracies in calorie or macronutrient calculations.</li>
+            </ul>
+            <h2>3. The "Roast" Feature (Notifications)</h2>
+            <p>Eate8 includes a feature that sends humorous or aggressive notifications ("Roasts") for motivation.</p>
+            <ul>
+                <li>By using the App, you acknowledge that these messages are for motivation and wellness tracking.</li>
+                <li><strong>Opt-Out:</strong> Users may disable or customize notification preferences at any time through device or in-app settings.</li>
+            </ul>
+            <h2>4. User Accounts and Termination</h2>
+            <ul>
+                <li>You are responsible for safeguarding your account login credentials.</li>
+                <li><strong>Termination:</strong> We reserve the right to terminate or suspend your account if you violate these Terms or misuse the App.</li>
+                <li><strong>Deletion:</strong> Account deletion is handled as described in our Privacy Policy.</li>
+            </ul>
+            <h2>5. Monetization</h2>
+            <p>The App is currently free and supported by advertisements. We reserve the right to introduce Premium features or subscriptions in the future. You will never be charged without your explicit consent.</p>
+            <h2>6. Limitation of Liability</h2>
+            <p>To the <strong>maximum extent permitted by applicable law</strong>, Eate8 and its developers shall not be liable for any indirect, incidental, or consequential damages arising from your use of the App.</p>
+            <h2>7. Governing Law</h2>
+            <p>These Terms shall be governed by and interpreted in accordance with the laws of India.</p>
+            <h2>8. Contact Us</h2>
+            <p>For any questions regarding these Terms, please contact us at: <a href="mailto:pabichat@gmail.com">pabichat@gmail.com</a></p>
+        </div>
+    </section>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-logo"><span>PABI</span></div>
+            <div class="footer-links">
+                <a href="#home">Home</a>
+                <a href="#features">Features</a>
+                <a href="#screenshots">App</a>
+                <a href="#nutrients">Nutrients</a>
+                <a href="#privacy">Privacy</a>
+                <a href="#terms">Terms</a>
+            </div>
+            <div class="footer-bottom">©2026 Eate8.</div>
+        </div>
+    </footer>
+</body>
+</html>
